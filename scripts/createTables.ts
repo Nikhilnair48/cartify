@@ -6,12 +6,12 @@ const createProductsTable = async () => {
   const params = {
     TableName: 'Products',
     KeySchema: [
-      { AttributeName: 'ProductId', KeyType: 'HASH' }, // Partition Key
+      { AttributeName: 'ProductId', KeyType: 'HASH' },
     ],
     AttributeDefinitions: [
-      { AttributeName: 'ProductId', AttributeType: 'S' }, // String type
+      { AttributeName: 'ProductId', AttributeType: 'S' },
     ],
-    BillingMode: 'PAY_PER_REQUEST', // Auto-scaling billing
+    BillingMode: 'PAY_PER_REQUEST',
   };
 
   try {

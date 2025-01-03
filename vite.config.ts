@@ -8,10 +8,19 @@ export default defineConfig({
     outDir: 'dist',
     lib: {
       entry: './src/index.ts',
-      formats: ['cjs'],
+      formats: ['es'],
     },
     rollupOptions: {
       external: ['aws-sdk'],
     },
+  },
+  resolve: {
+    alias: {
+      '@handlers': '/src/handlers',
+      '@models': '/src/models',
+      '@utils': '/src/utils',
+      '@services': '/src/services',
+    },
+    extensions: ['.ts', '.js'],
   },
 });
