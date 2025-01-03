@@ -1,19 +1,15 @@
 {
-    "compilerOptions": {
-      "module": "ES2020",
-      "moduleResolution": "nodenext",
-      "target": "ESNext",
-      "outDir": "dist",
-      "rootDir": "./",
-      "strict": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true
-    },
-    "exclude": ["node_modules", "**/*.test.ts"],
-    "include": [
-      "lib/**/*.ts",
-      "bin/**/*.ts",
-      "src/**/*.ts"
-    ]
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "ESNext",
+    "outDir": "dist",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["vite/client", "node"]
+  },
+  "exclude": ["node_modules", "**/*.test.ts"],
+  "include": ["lib/**/*.ts", "bin/**/*.ts", "src/**/*.ts", "vite.config.ts"]
 }
- 

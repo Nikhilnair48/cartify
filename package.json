@@ -4,10 +4,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "lint": "eslint . --ext .ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "npx eslint **/*.ts",
     "format": "prettier --write .",
     "test": "jest --coverage",
     "create-tables": "npx tsx scripts/createTables.ts"
@@ -33,7 +33,9 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "dependencies": {
     "@aws-sdk/lib-dynamodb": "^3.716.0",
