@@ -4,7 +4,12 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +17,7 @@
   "description": "",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.146",
+    "@types/graphql": "^14.5.0",
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
@@ -27,6 +33,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.716.0",
-    "@aws-sdk/lib-dynamodb": "^3.716.0"
+    "@aws-sdk/lib-dynamodb": "^3.716.0",
+    "graphql": "^16.10.0"
   }
 }
