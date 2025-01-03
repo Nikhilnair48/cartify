@@ -38,6 +38,7 @@
     "vite-tsconfig-paths": "^5.1.4"
   },
   "dependencies": {
+    "@aws-cdk/aws-appsync-alpha": "^2.59.0-alpha.0",
     "@aws-sdk/lib-dynamodb": "^3.716.0",
     "@aws-sdk/util-dynamodb": "^3.721.0",
     "aws-cdk-lib": "^2.173.4",
