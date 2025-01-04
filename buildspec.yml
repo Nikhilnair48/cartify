@@ -22,5 +22,5 @@ phases:
       - echo "Build phase complete."
 artifacts:
   files:
-    - cdk.out/**/*
+    - 'cdk.out/**/*'
   discard-paths: no
