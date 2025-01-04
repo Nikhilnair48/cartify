@@ -24,7 +24,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: CreateProduct
     };
 
     const params = {
-      TableName: process.env.PRODUCTS_TABLE_NAME || 'Products',
+      TableName: import.meta.env.VITE_PRODUCTS_TABLE_NAME || 'Products',
       Item: marshall(product),
     };
 

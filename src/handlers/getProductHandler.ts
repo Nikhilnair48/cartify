@@ -14,7 +14,7 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string }>
     }
 
     const params = {
-      TableName: process.env.PRODUCTS_TABLE_NAME || 'Products',
+      TableName: import.meta.env.VITE_PRODUCTS_TABLE_NAME || 'Products',
       Key: { ProductId: { S: ProductId } },
     };
 
