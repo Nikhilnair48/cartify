@@ -17,6 +17,7 @@ phases:
     commands:
       - echo "Synthesizing the CDK stack..."
       - npm run cdk:synth
+      - ls -la cdk.out/
   post_build:
     commands:
       - echo "Build phase complete."
