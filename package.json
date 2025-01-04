@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "npx eslint **/*.ts",
     "format": "prettier --write .",
-    "test": "jest --coverage",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
     "create-tables": "npx tsx scripts/createTables.ts"
   },
   "keywords": [],
@@ -23,6 +24,7 @@
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
+    "aws-sdk-client-mock": "^4.1.0",
     "constructs": "^10.4.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
@@ -35,13 +37,15 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "@aws-cdk/aws-appsync-alpha": "^2.59.0-alpha.0",
     "@aws-sdk/lib-dynamodb": "^3.716.0",
     "@aws-sdk/util-dynamodb": "^3.721.0",
     "aws-cdk-lib": "^2.173.4",
+    "dotenv": "^16.4.7",
     "graphql": "^16.10.0"
   }
 }
