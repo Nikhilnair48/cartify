@@ -5,27 +5,22 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - echo Installing dependencies...
-      - npm install
-  # TODO: later
-  # pre_build:
-  #   commands:
-  #     - echo Running pre-build steps...
-  #     - npm run lint
+      - echo "Running install phase..."
+      - npm ci
+      - npm install -g aws-cdk
+  pre_build:
+    commands:
+      - echo "Running pre-build (lint/tests, etc.)..."
+      # - npm run lint
+      - npm run test
   build:
     commands:
-      - echo Building the project...
-      - npm run build
-      - echo Running tests...
-      - npm test
+      - echo "Synthesizing the CDK stack..."
+      - npm run cdk:synth
   post_build:
     commands:
-      - echo Packaging and deploying Lambda functions...
-      - npm run deploy
-
+      - echo "Build phase complete."
 artifacts:
   files:
-    - dist/**
-    - src/**
-    - cdk.out/**
+    - cdk.out/**/*
   discard-paths: no
