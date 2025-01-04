@@ -19,7 +19,7 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string }>
     await client.send(new DeleteItemCommand(params));
 
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting product:', error.message);
     throw new Error('Failed to delete product.');
   }

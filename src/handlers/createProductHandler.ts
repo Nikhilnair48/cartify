@@ -31,7 +31,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: CreateProduct
     await client.send(new PutItemCommand(params));
 
     return product;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating product:', error.message);
     throw new Error('Failed to create product.');
   }

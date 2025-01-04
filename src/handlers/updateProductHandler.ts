@@ -38,7 +38,7 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; i
     await client.send(new UpdateItemCommand(params));
 
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating product:', error.message);
     throw new Error('Failed to update product.');
   }

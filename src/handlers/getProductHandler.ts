@@ -27,7 +27,7 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string }>
     const product = unmarshall(result.Item) as Product;
 
     return product;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching product:', error.message);
     throw new Error('Failed to fetch product.');
   }
