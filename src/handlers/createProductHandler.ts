@@ -4,11 +4,15 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { validateProductInput } from '../utils/validation';
 import { CreateProductInput, Product } from '../utils/types';
 import { v4 as uuidv4 } from 'uuid';
+import { getSecrets } from '../utils/secretsManager';
 
 const client = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ input: CreateProductInput }>) => {
   try {
+    const secrets = await getSecrets('product-management-env');
+    const PRODUCTS_TABLE_NAME = secrets.PRODUCTS_TABLE_NAME || 'Products';
+
     const { input } = event.arguments;
     validateProductInput(input);
 
@@ -24,7 +28,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: CreateProduct
     };
 
     const params = {
-      TableName: import.meta.env.VITE_PRODUCTS_TABLE_NAME || 'Products',
+      TableName: PRODUCTS_TABLE_NAME,
       Item: marshall(product),
     };
 

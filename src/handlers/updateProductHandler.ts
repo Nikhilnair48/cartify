@@ -1,11 +1,15 @@
 import { AppSyncResolverEvent } from 'aws-lambda';
 import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { UpdateProductInput } from '../utils/types';
+import { getSecrets } from '../utils/secretsManager';
 
 const client = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; input: UpdateProductInput }>) => {
   try {
+    const secrets = await getSecrets('product-management-env');
+    const PRODUCTS_TABLE_NAME = secrets.PRODUCTS_TABLE_NAME || 'Products';
+
     const { ProductId, input } = event.arguments;
 
     if (!ProductId) {
@@ -28,7 +32,7 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; i
     }
 
     const params = {
-      TableName: import.meta.env.VITE_PRODUCTS_TABLE_NAME || 'Products',
+      TableName: PRODUCTS_TABLE_NAME,
       Key: { ProductId: { S: ProductId } },
       UpdateExpression: `SET ${updateExpressions.join(', ')}`,
       ExpressionAttributeValues: expressionAttributeValues,
