@@ -3,14 +3,24 @@ import { CreateProductInput } from '../../src/utils/types';
 import { handler } from '../../src/handlers/createProductHandler';
 import { mockClient } from 'aws-sdk-client-mock';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 
 describe('createProductHandler', () => {
-const ddbMock = mockClient(DynamoDBClient);
+    const ddbMock = mockClient(DynamoDBClient);
+    const secretsMock = mockClient(SecretsManagerClient);
+
   beforeEach(() => {
     ddbMock.reset();
+    secretsMock.reset();
   });
 
   it('should create a product successfully', async () => {
+    secretsMock.on(GetSecretValueCommand).resolves({
+        SecretString: JSON.stringify({
+            PRODUCTS_TABLE_NAME: 'Products',
+        }),
+    });
+
     ddbMock.on(PutItemCommand).resolves({});
 
     const event: AppSyncResolverEvent<{ input: CreateProductInput }> = {
@@ -55,7 +65,7 @@ const ddbMock = mockClient(DynamoDBClient);
     
     expect(ddbMock.calls().length).toBe(1);
     expect(ddbMock.calls()[0].args[0].input).toEqual({
-      TableName: import.meta.env.VITE_PRODUCTS_TABLE_NAME,
+      TableName: 'Products',
       Item: {
         ProductId: { S: expect.any(String) },
         Name: { S: 'Test Product' },
