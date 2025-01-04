@@ -1,0 +1,71 @@
+type Product {
+  ProductId: ID!
+  Name: String!
+  Description: String
+  Price: Float!
+  Category: String!
+  Stock: Int!
+  CreatedAt: String!
+  UpdatedAt: String!
+}
+
+type ProductTaxonomyAttribute {
+  TaxonomyId: ID!
+  Name: String!
+  Description: String
+  ParentId: ID
+  Type: String!
+}
+
+type Query {
+  getProduct(ProductId: ID!): Product
+  listProducts: [Product!]
+
+  getProductTaxonomyAttribute(TaxonomyId: ID!): ProductTaxonomyAttribute
+  listProductTaxonomyAttributes(ParentId: ID): [ProductTaxonomyAttribute!]
+}
+
+type Mutation {
+  createProduct(input: CreateProductInput!): Product
+  updateProduct(ProductId: ID!, input: UpdateProductInput!): Product
+  deleteProduct(ProductId: ID!): Boolean
+
+  createProductTaxonomyAttribute(
+    input: CreateProductTaxonomyAttributeInput!
+  ): ProductTaxonomyAttribute
+  updateProductTaxonomyAttribute(
+    TaxonomyId: ID!
+    input: UpdateProductTaxonomyAttributeInput!
+  ): ProductTaxonomyAttribute
+  deleteProductTaxonomyAttribute(TaxonomyId: ID!): Boolean
+}
+
+input CreateProductInput {
+  Name: String!
+  Description: String
+  Price: Float!
+  Category: String!
+  Stock: Int!
+}
+
+input UpdateProductInput {
+  Name: String
+  Description: String
+  Price: Float
+  Category: String
+  Stock: Int
+}
+
+input CreateProductTaxonomyAttributeInput {
+  Name: String!
+  Description: String
+  ParentId: ID
+  Type: String!
+}
+
+input UpdateProductTaxonomyAttributeInput {
+  Name: String
+  Description: String
+  ParentId: ID
+  Type: String
+}
