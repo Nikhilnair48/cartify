@@ -74,7 +74,7 @@ export class CodePipelineSetup extends Construct {
     const deployAction = new codepipeline_actions.CloudFormationCreateUpdateStackAction({
       actionName: 'Deploy_CFN',
       stackName: 'ProductManagementStack',
-      templatePath: buildOutput.atPath('cdk.out/ProductManagementStack.template.json'),
+      templatePath: buildOutput.atPath('ProductManagementStack.template.json'),
       adminPermissions: true, // Consider refining permissions for least privilege
     });
 

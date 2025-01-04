@@ -23,5 +23,5 @@ phases:
       - echo "Build phase complete."
 artifacts:
   files:
-    - 'cdk.out/**/*'
-  discard-paths: no
+    - 'cdk.out/ProductManagementStack.template.json'
+  discard-paths: yes
