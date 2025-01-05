@@ -17,7 +17,6 @@ export class ProductManagementStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Define the artifact bucket
     const artifactBucket = new s3.Bucket(this, 'ArtifactBucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -26,13 +25,10 @@ export class ProductManagementStack extends cdk.Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
     });
 
-    // Define the CodeStar Connection ARN
-    const codestarConnectionArn = 'arn:aws:codeconnections:ap-south-1:522814699880:connection/b93046b1-d38a-41a0-a873-a05518cc5d61'; // Replace with your actual ARN
+    const codestarConnectionArn = 'arn:aws:codeconnections:ap-south-1:522814699880:connection/b93046b1-d38a-41a0-a873-a05518cc5d61';
 
-    // Initialize the CodePipelineSetup construct
     new CodePipelineSetup(this, 'PipelineSetup', artifactBucket.bucketName, codestarConnectionArn);
 
-    // Reference existing DynamoDB tables
     const productsTable = dynamodb.Table.fromTableName(this, 'ProductsTable', 'Products');
     const productTaxonomyTable = dynamodb.Table.fromTableName(
       this,
@@ -40,7 +36,6 @@ export class ProductManagementStack extends cdk.Stack {
       'ProductTaxonomyAttributes'
     );
 
-    // Define AppSync API
     const api = new appsync.GraphqlApi(this, 'ProductManagementApi', {
       name: 'ProductManagementApi',
       schema: appsync.SchemaFile.fromAsset(path.join(__dirname, '../src/schema.graphql')),
@@ -59,7 +54,6 @@ export class ProductManagementStack extends cdk.Stack {
       value: api.graphqlUrl,
     });
 
-    // Define Secrets Manager Policy
     const secretArn = `arn:aws:secretsmanager:${this.region}:${this.account}:secret:product-management-env`;
     const secretPolicy = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -67,7 +61,6 @@ export class ProductManagementStack extends cdk.Stack {
       resources: [secretArn],
     });
 
-    // Define Lambda Functions
     const createProductLambda = new NodejsFunction(this, 'CreateProductHandler', {
       entry: path.join(__dirname, '../src/handlers/createProductHandler.ts'),
       runtime: cdk.aws_lambda.Runtime.NODEJS_20_X, // Updated runtime to Node.js 16.x
@@ -124,19 +117,16 @@ export class ProductManagementStack extends cdk.Stack {
     });
     updateProductLambda.addToRolePolicy(secretPolicy);
 
-    // Grant necessary permissions to Lambda functions
     productsTable.grantReadWriteData(createProductLambda);
     productsTable.grantReadData(getProductLambda);
     productsTable.grantWriteData(deleteProductLambda);
     productsTable.grantWriteData(updateProductLambda);
 
-    // Define AppSync Data Sources
     const createProductDataSource = api.addLambdaDataSource('CreateProductDataSource', createProductLambda);
     const getProductDataSource = api.addLambdaDataSource('GetProductDataSource', getProductLambda);
     const deleteProductDataSource = api.addLambdaDataSource('DeleteProductDataSource', deleteProductLambda);
     const updateProductDataSource = api.addLambdaDataSource('UpdateProductDataSource', updateProductLambda);
 
-    // Define Resolvers
     createProductDataSource.createResolver('CreateProductResolver', {
       typeName: 'Mutation',
       fieldName: 'createProduct',
@@ -157,7 +147,6 @@ export class ProductManagementStack extends cdk.Stack {
       fieldName: 'updateProduct',
     });
 
-    // Output the artifact bucket name
     new cdk.CfnOutput(this, 'ArtifactBucketName', {
       value: artifactBucket.bucketName,
       description: 'Artifact bucket used by CodePipeline',

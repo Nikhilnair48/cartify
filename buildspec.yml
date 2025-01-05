@@ -16,12 +16,16 @@ phases:
   build:
     commands:
       - echo "Synthesizing the CDK stack..."
+      - npm run build
       - npm run cdk:synth
       - ls -la cdk.out/
   post_build:
     commands:
       - echo "Build phase complete."
+      - aws cloudformation package --template-file cdk.out/ProductManagementStack.template.json --s3-bucket productmanagementstack-artifactbucket7410c9ef-kfx7zcavhapm --output-template-file packaged-template.json
 artifacts:
   files:
-    - 'cdk.out/ProductManagementStack.template.json'
+    - cdk.out/*.template.json
+    - cdk.out/*.assets.json
+    - cdk.out/*.zip
   discard-paths: yes

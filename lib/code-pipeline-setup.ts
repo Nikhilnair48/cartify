@@ -14,29 +14,25 @@ export class CodePipelineSetup extends Construct {
   ) {
     super(scope, id);
 
-    // Reference the existing artifact bucket
     const artifactBucket = s3.Bucket.fromBucketName(this, 'ArtifactBucket', artifactBucketName);
 
-    // Define the Pipeline
     const pipeline = new codepipeline.Pipeline(this, 'ProductManagementPipeline', {
       pipelineName: 'ProductManagementPipeline',
-      pipelineType: codepipeline.PipelineType.V2, // Explicitly set to V2
-      artifactBucket: artifactBucket, // Use the specified artifact bucket
+      pipelineType: codepipeline.PipelineType.V2,
+      artifactBucket: artifactBucket,
     });
 
-    // Define Artifacts
     const sourceOutput = new codepipeline.Artifact('SourceOutput');
     const buildOutput = new codepipeline.Artifact('BuildOutput');
 
-    // Source Stage using CodeStar Connections
     const sourceAction = new codepipeline_actions.CodeStarConnectionsSourceAction({
       actionName: 'GitHub_Source',
       owner: 'Nikhilnair48',
       repo: 'cartify',
       branch: 'main',
-      connectionArn: codestarConnectionArn, // CodeStar Connection ARN
+      connectionArn: codestarConnectionArn,
       output: sourceOutput,
-      triggerOnPush: true, // Ensure pipeline triggers on push
+      triggerOnPush: true,
     });
 
     pipeline.addStage({
@@ -44,7 +40,6 @@ export class CodePipelineSetup extends Construct {
       actions: [sourceAction],
     });
 
-    // Define CodeBuild Project
     const buildProject = new codebuild.PipelineProject(this, 'BuildProject', {
       projectName: 'ProductManagementBuildProject',
       buildSpec: codebuild.BuildSpec.fromSourceFilename('buildspec.yml'),
@@ -52,11 +47,6 @@ export class CodePipelineSetup extends Construct {
         buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
       },
     });
-
-    // Example: Grant CodeBuild permissions to interact with DynamoDB and Lambda
-    // Assuming you have defined the DynamoDB tables and Lambda functions elsewhere
-    // const productsTable = dynamodb.Table.fromTableName(this, 'ProductsTable', 'Products');
-    // productsTable.grantReadWriteData(buildProject);
 
     pipeline.addStage({
       stageName: 'Build',
@@ -70,12 +60,11 @@ export class CodePipelineSetup extends Construct {
       ],
     });
 
-    // Deploy Stage using CloudFormation
     const deployAction = new codepipeline_actions.CloudFormationCreateUpdateStackAction({
       actionName: 'Deploy_CFN',
       stackName: 'ProductManagementStack',
       templatePath: buildOutput.atPath('ProductManagementStack.template.json'),
-      adminPermissions: true, // Consider refining permissions for least privilege
+      adminPermissions: true,
     });
 
     pipeline.addStage({
@@ -83,7 +72,6 @@ export class CodePipelineSetup extends Construct {
       actions: [deployAction],
     });
 
-    // Output the pipeline name
     new cdk.CfnOutput(this, 'PipelineName', {
       value: pipeline.pipelineName,
       description: 'The CodePipeline for Product Management',

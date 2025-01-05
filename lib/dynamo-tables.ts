@@ -8,14 +8,12 @@ export class DynamoDBTables extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    // Define Products Table
     this.productsTable = new dynamodb.Table(this, 'ProductsTable', {
       tableName: 'Products',
       partitionKey: { name: 'ProductId', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
 
-    // Define ProductTaxonomyAttributes Table
     this.productTaxonomyTable = new dynamodb.Table(
       this,
       'ProductTaxonomyAttributesTable',
@@ -29,7 +27,6 @@ export class DynamoDBTables extends Construct {
       },
     );
 
-    // Add GSI for ProductTaxonomyAttributes
     this.productTaxonomyTable.addGlobalSecondaryIndex({
       indexName: 'ParentIndex',
       partitionKey: { name: 'ParentId', type: dynamodb.AttributeType.STRING },
