@@ -25,7 +25,5 @@ phases:
       - aws cloudformation package --template-file cdk.out/ProductManagementStack.template.json --s3-bucket productmanagementstack-artifactbucket7410c9ef-kfx7zcavhapm --output-template-file packaged-template.json
 artifacts:
   files:
-    - cdk.out/*.template.json
-    - cdk.out/*.assets.json
-    - cdk.out/*.zip
+    - '**/*'
   discard-paths: yes

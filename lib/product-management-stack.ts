@@ -120,7 +120,7 @@ export class ProductManagementStack extends cdk.Stack {
     productsTable.grantReadWriteData(createProductLambda);
     productsTable.grantReadData(getProductLambda);
     productsTable.grantWriteData(deleteProductLambda);
-    productsTable.grantWriteData(updateProductLambda);
+    productsTable.grantReadWriteData(updateProductLambda);
 
     const createProductDataSource = api.addLambdaDataSource('CreateProductDataSource', createProductLambda);
     const getProductDataSource = api.addLambdaDataSource('GetProductDataSource', getProductLambda);

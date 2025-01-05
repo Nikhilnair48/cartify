@@ -25,6 +25,7 @@ export default defineConfig({
     rollupOptions: {
         input: handlerEntries,
         external: ['aws-sdk'],
+        preserveEntrySignatures: 'strict',
         output: {
             entryFileNames: '[name].js',
             chunkFileNames: '[name].js',
