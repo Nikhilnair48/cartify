@@ -1,15 +1,18 @@
 import { AppSyncResolverEvent } from 'aws-lambda';
-import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { UpdateProductInput } from '../utils/types';
 import { getSecrets } from '../utils/secretsManager';
+import { unmarshall } from '@aws-sdk/util-dynamodb';
 
 const client = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; input: UpdateProductInput }>) => {
   try {
-    console.log("here");
+    console.log(event);
     const secrets = await getSecrets('product-management-env');
     const PRODUCTS_TABLE_NAME = secrets.PRODUCTS_TABLE_NAME || 'Products';
+
+    console.log(PRODUCTS_TABLE_NAME);
 
     const { ProductId, input } = event.arguments;
 
@@ -23,13 +26,14 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; i
 
     if (input.Name) {
       updateExpressions.push('#name = :name');
-      expressionAttributeValues[':name'] = input.Name;
+      expressionAttributeValues[':name'] = { S: input.Name }; // Dynamically typed as 'S' for string
       expressionAttributeNames['#name'] = 'Name';
     }
-
+    
     if (input.Price) {
-      updateExpressions.push('Price = :price');
-      expressionAttributeValues[':price'] = input.Price;
+      updateExpressions.push('#price = :price');
+      expressionAttributeValues[':price'] = { N: input.Price.toString() }; // 'N' for number
+      expressionAttributeNames['#price'] = 'Price';
     }
 
     const params = {
@@ -40,9 +44,27 @@ export const handler = async (event: AppSyncResolverEvent<{ ProductId: string; i
       ExpressionAttributeNames: expressionAttributeNames,
     };
 
+    console.log(params);
+
     await client.send(new UpdateItemCommand(params));
 
-    return true;
+    const getParams = {
+      TableName: PRODUCTS_TABLE_NAME,
+      Key: { ProductId: { S: ProductId } },
+    };
+
+    console.log('Get Params:', getParams);
+
+    const result = await client.send(new GetItemCommand(getParams));
+
+    if (!result.Item) {
+      throw new Error(`Product with ID ${ProductId} not found after update.`);
+    }
+
+    const updatedProduct = unmarshall(result.Item);
+    console.log('Updated Product:', updatedProduct);
+
+    return updatedProduct;
   } catch (error: any) {
     console.error('Error updating product:', error.message);
     throw new Error('Failed to update product.');
