@@ -68,3 +68,7 @@ The project includes an automated CI/CD pipeline built using AWS CodePipeline. I
     - The GitHub repository (via CodeStar connection).
     - S3 for artifact storage.
     - Secrets Manager for fetching environment variables.
+
+## Walkthrough
+
+[Video walkthrough](https://drive.google.com/file/d/1LnxiIUPtanereRb_bwKUDavQDzTj0r93/view?usp=sharing)
