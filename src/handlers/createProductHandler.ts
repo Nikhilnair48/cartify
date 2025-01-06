@@ -10,6 +10,7 @@ const client = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ input: CreateProductInput }>) => {
   try {
+    console.log("test");
     const secrets = await getSecrets('product-management-env');
     const PRODUCTS_TABLE_NAME = secrets.PRODUCTS_TABLE_NAME || 'Products';
 
@@ -33,7 +34,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: CreateProduct
     };
 
     await client.send(new PutItemCommand(params));
-
+    
     return product;
   } catch (error: any) {
     console.error('Error creating product:', error.message);
