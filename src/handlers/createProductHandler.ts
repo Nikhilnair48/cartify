@@ -10,7 +10,7 @@ const client = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ input: CreateProductInput }>) => {
   try {
-    console.log("test");
+    console.log("test2");
     const secrets = await getSecrets('product-management-env');
     const PRODUCTS_TABLE_NAME = secrets.PRODUCTS_TABLE_NAME || 'Products';
 
